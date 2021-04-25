@@ -1,0 +1,14 @@
+com/posexample/MainApplication.java
+ com.posexample.MainApplication
+ com.posexample.MainApplication$1
+com/posexample/ReactNativeFlipper.java
+ com.posexample.ReactNativeFlipper
+ com.posexample.ReactNativeFlipper$1
+ com.posexample.ReactNativeFlipper$2
+ com.posexample.ReactNativeFlipper$2$1
+com/posexample/MainActivity.java
+ com.posexample.MainActivity
+com/posexample/BuildConfig.java
+ com.posexample.BuildConfig
+com/facebook/react/PackageList.java
+ com.facebook.react.PackageList
