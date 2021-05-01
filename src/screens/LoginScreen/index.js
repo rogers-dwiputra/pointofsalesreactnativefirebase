@@ -6,10 +6,27 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
+import auth from '@react-native-firebase/auth';
 
 export default LoginScreen = ({navigation}) => {
-    const [isRequest2FA, setIsRequest2FA] = useState(false);
+    const [confirm, setConfirm] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState("");
+    const [code, setCode] = useState("");
+
+    // Handle the button press
+    async function signInWithPhoneNumber(phoneNumber) {
+      console.log(phoneNumber);
+      const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+      setConfirm(confirmation);
+    }
+
+    async function confirmCode() {
+      try {
+        await confirm.confirm(code);
+      } catch (error) {
+        console.log('Invalid code.');
+      }
+    }
   
     return (
       <View style={{ flex: 1, marginHorizontal: 8, backgroundColor: "#FFFFFF" }}>
@@ -18,7 +35,7 @@ export default LoginScreen = ({navigation}) => {
         </View>
         <View style={{ flex: 1 }}>
           {
-            isRequest2FA == false ? (
+            confirm == false ? (
               <>
               <TextInput
                 placeholder="Phone Number"
@@ -29,7 +46,7 @@ export default LoginScreen = ({navigation}) => {
               <Button
               title="Request 2FA Code"
               onPress={() => {
-                setIsRequest2FA(true)
+                signInWithPhoneNumber(phoneNumber)
               }}
               />
               </>
@@ -39,19 +56,20 @@ export default LoginScreen = ({navigation}) => {
               <TextInput
                 placeholder="2FA Code"
                 style={{ marginBottom: 8, borderBottomColor: '#000000', borderBottomWidth: 1 }}
+                onChangeText={text => setCode(text)}
+                defaultValue={code}
               />
               <Button
               title="Submit"
               onPress={() => {
-                setIsRequest2FA(false)
-                navigation.navigate("MainTab")
+                confirmCode();
               }}
               />
               <View style={{ marginTop: 8 }}>
                 <Button
                 title="Request Another Code"
                 onPress={() => {
-                  setIsRequest2FA(false)
+                  setConfirm(false)
                 }}
                 />
               </View>

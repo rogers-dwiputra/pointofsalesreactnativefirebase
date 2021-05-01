@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -19,6 +19,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import auth from '@react-native-firebase/auth';
 
 import LoginScreen from './src/screens/LoginScreen';
 import RegistrasiScreen from './src/screens/RegistrasiScreen';
@@ -27,31 +28,62 @@ import TransactionsTab from './src/screens/TransactionsTab';
 import SettingsTab from './src/screens/SettingsTab';
 import OrderSummaryScreen from './src/screens/OrderSummaryScreen';
 import OrderFinishScreen from './src/screens/OrderFinishScreen';
+import Splashscreen from './src/screens/Splashscreen';
 
 const Stack = createStackNavigator();
 const App = () => {
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
+
+  // Handle user state changes
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen 
-        name="Login" 
-        component={LoginScreen} 
-        options={{ headerShown: false }}
-        />
-        <Stack.Screen name="Registrasi" component={RegistrasiScreen} />
-        <Stack.Screen 
-        name="MainTab" 
-        component={MainTab} 
-        options={{ headerShown: false }}
-        />
-        <Stack.Screen name="OrderSummary" component={OrderSummaryScreen} />
-        <Stack.Screen name="OrderFinish" component={OrderFinishScreen} />
+        {
+          initializing ? (
+            <Stack.Screen 
+            name="Splashscreen" 
+            component={Splashscreen} 
+            options={{ headerShown: false }}
+            />
+          ) : (
+            !user ? (
+              <>
+              <Stack.Screen 
+              name="Login" 
+              component={LoginScreen} 
+              options={{ headerShown: false }}
+              />
+              <Stack.Screen name="Registrasi" component={RegistrasiScreen} />
+              </>
+            ) : (
+              <>
+              <Stack.Screen 
+              name="MainTab" 
+              component={MainTab} 
+              options={{ headerShown: false }}
+              />
+              <Stack.Screen name="OrderSummary" component={OrderSummaryScreen} />
+              <Stack.Screen name="OrderFinish" component={OrderFinishScreen} />
+              </>
+            )
+          )
+        }
       </Stack.Navigator>
     </NavigationContainer>
   )
 }
-
-
 
 const Tab = createBottomTabNavigator();
 const MainTab = () => {
