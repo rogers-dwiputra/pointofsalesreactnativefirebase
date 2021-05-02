@@ -6,21 +6,23 @@ import {
   Button
 } from 'react-native';
 
-export default OrderFinishScreen = ({ navigation }) => {
+export default OrderFinishScreen = ({ route, navigation }) => {
+    const { orderId, orderTotal, orderPayment, orderChange, menuName, menuPrice, qty } = route.params;
+
     return (
         <View style={{ flex: 1, backgroundColor: "#CDEEFF" }}>
             <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
                 <Text style={{ fontSize: 24, marginBottom: 8 }}>Order Complete!</Text>
             </View>
             <View style={{ flex: 2, padding: 8, backgroundColor: "#FFFFFF", borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
-                <Text style={{ textAlign: 'center', marginBottom: 8 }}>#12345678 24 April 2021 10:00</Text>
+                <Text style={{ textAlign: 'center', marginBottom: 8 }}>#{orderId}</Text>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
                     <View style={{ flex: 2 }}>
-                        <Text>Nasi Goreng Telur x 2</Text>
-                        <Text>@ Rp. 20000</Text>
+                        <Text>{menuName} x {qty}</Text>
+                        <Text>@ Rp. {menuPrice}</Text>
                     </View>
                     <View style={{ flex: 1 }}>
-                        <Text style={{ textAlign: 'right' }}>Rp. 40000</Text>
+                        <Text style={{ textAlign: 'right' }}>Rp. {orderTotal}</Text>
                     </View>
                 </View>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -28,7 +30,7 @@ export default OrderFinishScreen = ({ navigation }) => {
                         <Text>Total</Text>
                     </View>
                     <View style={{ flex: 1 }}>
-                        <Text style={{ textAlign: 'right' }}>Rp. 40000</Text>
+                        <Text style={{ textAlign: 'right' }}>Rp. {orderTotal}</Text>
                     </View>
                 </View>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -36,7 +38,7 @@ export default OrderFinishScreen = ({ navigation }) => {
                         <Text>Payment</Text>
                     </View>
                     <View style={{ flex: 1 }}>
-                        <Text style={{ textAlign: 'right' }}>Rp. 50000</Text>
+                        <Text style={{ textAlign: 'right' }}>Rp. {orderPayment}</Text>
                     </View>
                 </View>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -44,7 +46,7 @@ export default OrderFinishScreen = ({ navigation }) => {
                         <Text>Change</Text>
                     </View>
                     <View style={{ flex: 1 }}>
-                        <Text style={{ textAlign: 'right' }}>Rp. 10000</Text>
+                        <Text style={{ textAlign: 'right' }}>Rp. {orderChange}</Text>
                     </View>
                 </View>
                 <View>
