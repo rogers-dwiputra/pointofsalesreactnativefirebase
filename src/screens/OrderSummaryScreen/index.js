@@ -22,6 +22,7 @@ export default OrderSummaryScreen = ({ route, navigation }) => {
     const submitOrder = () => {
         const orderId = getRandomInt(99999999)
         const orderTime = firestore.FieldValue.serverTimestamp()
+        
         firestore()
         .collection('orders')
         .doc(orderId.toString())

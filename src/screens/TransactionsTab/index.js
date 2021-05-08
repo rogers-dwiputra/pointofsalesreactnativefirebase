@@ -8,26 +8,26 @@ import firestore from '@react-native-firebase/firestore';
 
 export default TransactionsTab = () => {
     const [orders, setOrders] = useState([]);
+    const [isRefresh, setIsRefresh] = useState(false);
 
     useEffect(() => {
-      const subscriber = firestore()
-      .collection('orders')
-      .onSnapshot(querySnapshot => {
-        const orders = [];
-
-        querySnapshot.forEach(documentSnapshot => {
-          orders.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
-          });
-        });
-
-        setOrders(orders);
-      });
-
-    // Unsubscribe from events when no longer in use
-    return () => subscriber();
+      console.log('useEffect')
+      getOrders();
     }, []);
+
+    const getOrders = async () => {
+      const orders = [];
+      const ordersFirestore = await firestore().collection('orders').orderBy('orderTime', 'desc').get();
+      ordersFirestore.forEach(document => {
+        console.log(document.data())
+        orders.push({
+          ...document.data(),
+          key: document.id,
+        });
+      })
+      setOrders(orders);
+      // console.log(orders);
+    }
 
     const renderItem = ({item}) => {
       // console.log(item.key+' '+item.orderTime.toDate().toDateString())
@@ -39,12 +39,20 @@ export default TransactionsTab = () => {
         </View>
       )
     }
+
+    const onRefresh = () => {
+      setIsRefresh(true)
+      getOrders();
+      setIsRefresh(false)
+    }
   
     return (
       <View style={{ flex: 1, marginHorizontal: 8, paddingTop: 8 }}>
         <FlatList
           data={orders}
           renderItem={renderItem}
+          onRefresh={() => { onRefresh() }}
+          refreshing={isRefresh}
         />
       </View>
     )
